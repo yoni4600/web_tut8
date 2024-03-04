@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+      .selected {
+        box-shadow: 0 0 10px 3px #ff4500;
+      }
+      .dim {
+        filter: grayscale(100%);
+      }
+      .thumbnail img {
+        transition: transform 0.2s ease, filter 0.2s ease;
+      }
+      .thumbnail img:hover {
+        transform: scale(1.1);
+      }
+      button {
+        transition: background-color 0.2s ease;
+      }
+    </style>
+</head>
+<body class="bg-gray-100 p-5">
+  <div id="app"></div>
+
+  <script type="text/babel">
+    function ImageGallery() {
+      const [selectedImageId, setSelectedImageId] = React.useState(10);
+      const imageIds = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+
+      const selectImage = (id) => {
+        setSelectedImageId(id);
+      };
+
+      const selectNextImage = () => {
+        const currentIndex = imageIds.indexOf(selectedImageId);
+        if (currentIndex < imageIds.length - 1) {
+          setSelectedImageId(imageIds[currentIndex + 1]);
+        }
+      };
+
+      const selectPreviousImage = () => {
+        const currentIndex = imageIds.indexOf(selectedImageId);
+        if (currentIndex > 0) {
+          setSelectedImageId(imageIds[currentIndex - 1]);
+        }
+      };
+
+      return (
+        <div>
+          <div className="flex flex-wrap justify-center">
+            {imageIds.map((id) => (
+              <div key={id} className="thumbnail" onClick={() => selectImage(id)}>
+                <img className={`cursor-pointer max-w-none w-24 h-24 m-2 object-cover rounded-lg ${id === selectedImageId ? 'selected' : 'dim'}`} src={`https://picsum.photos/id/${id}/100/100`} alt="Thumbnail" />
+              </div>
+            ))}
+          </div>
+          <div className="my-8 flex justify-center items-center">
+            <button onClick={selectPreviousImage} className="px-6 py-3 mx-3 bg-gray-300 rounded-full hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50">&#10094; Prev</button>
+            <img className="max-w-full h-auto rounded-lg shadow-lg" src={`https://picsum.photos/id/${selectedImageId}/500/500`} alt="Large Image" />
+            <button onClick={selectNextImage} className="px-6 py-3 mx-3 bg-gray-300 rounded-full hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50">Next &#10095;</button>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<ImageGallery />, document.getElementById('app'));
+  </script>
+</body>
+</html>
